@@ -34,7 +34,8 @@ export async function GET(request: Request) {
     const { data } = await supabase.auth.getUser();
     if (data.user) {
       // Qui notifichiamo tutti gli admin che c'è un account da approvare
-      await notifyAdminsForApproval(data.user.id);
+      notifyAdminsForApproval(data.user.id).catch(() => {});
+
     }
   }
 
