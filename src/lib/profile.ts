@@ -1,4 +1,4 @@
-// lib/profile.ts
+// src/lib/profile.ts
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export type Profile = {
@@ -10,7 +10,8 @@ export type Profile = {
 };
 
 export async function getMyProfile(): Promise<Profile | null> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
+
   const {
     data: { user },
   } = await supabase.auth.getUser();

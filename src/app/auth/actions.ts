@@ -1,4 +1,4 @@
-// app/auth/actions.ts
+// src/app/auth/actions.ts
 "use server";
 
 import { redirect } from "next/navigation";
@@ -9,14 +9,13 @@ export async function signUpAction(formData: FormData) {
   const password = String(formData.get("password") ?? "");
   const displayName = String(formData.get("display_name") ?? "").trim();
 
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: { display_name: displayName },
-      // Supabase userà Site URL per i link di conferma
     },
   });
 
@@ -24,7 +23,6 @@ export async function signUpAction(formData: FormData) {
     redirect(`/signup?error=${encodeURIComponent(error.message)}`);
   }
 
-  // Dopo signup: l'utente deve verificare email e poi attendere approvazione admin
   redirect("/signup?checkEmail=1");
 }
 
@@ -32,7 +30,7 @@ export async function signInAction(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
 
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { error } = await supabase.auth.signInWithPassword({
     email,
@@ -47,7 +45,7 @@ export async function signInAction(formData: FormData) {
 }
 
 export async function signOutAction() {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   await supabase.auth.signOut();
   redirect("/");
 }
